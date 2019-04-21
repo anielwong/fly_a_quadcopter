@@ -21,9 +21,29 @@ Subjects learned by completing the project:
 
 This project contains several files:
 
-    dog_breed.ipynb: This is the main file where the project is performed.
-    physics_sim.py : This file is used to obtain 
+    Quadcopter_Proeject.ipynb: This is the main file where the project is performed.
+    physics_sim.py : This file contains the simulator for the quadcopter. DO NOT MODIFY THIS FILE.
     agents : This folder contain the built agents that flies the quadcopter.
-    task.py : This file contain human images.
-    haarcascades : This folder contain OpenCV's implementation of Haar feature-based cascade classifiers to detect human faces in images.
-    
+    task.py : This file contains the task (environment) to perform.
+
+In this project, `task.py` will define the task chosen. A first draft of task (policy_search.py) is provided to start with.
+
+`agent.py` also design a reinforcement learning (RL) agent to complete the chosen task
+
+## Project Instructions
+
+### Instructions
+
+1. Clone the repository and navigate to the downloaded folder.
+```	
+git clone https://github.com/anielwong/fly_a_quadcopter.git
+cd fly_a_quadcopter
+```
+
+2. Open the notebook.
+```
+jupyter notebook Quadcopter_Project.ipynb
+```
+
+3. Follow the instructions and tweak hyperparameters at will. 
+
