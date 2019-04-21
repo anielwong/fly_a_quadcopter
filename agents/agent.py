@@ -1,4 +1,4 @@
-# TODO: your agent here!
+# Agent DDPG
 import random
 from collections import namedtuple, deque
 import numpy as np
@@ -7,7 +7,10 @@ from keras import layers, models, optimizers
 from keras import backend as K
 
 
-
+# We put together the actor and policy models to build our DDPG agent. 
+# Note that we will need two copies of each model - one local and one target. 
+# This is an extension of the "Fixed Q Targets" technique from Deep Q-Learning, and is used to decouple 
+# the parameters being updated from the ones that are producing target values.
 class DDPG():
     """Reinforcement Learning agent that learns using DDPG."""
     def __init__(self, task):
@@ -117,6 +120,9 @@ class DDPG():
         new_weights = self.tau * local_weights + (1 - self.tau) * target_weights
         target_model.set_weights(new_weights)
 
+        
+# Most modern reinforcement learning algorithms benefit from using a replay memory or buffer to store 
+# and recall experience tuples.
 class ReplayBuffer:
     """Fixed-size buffer to store experience tuples."""
 
@@ -144,6 +150,13 @@ class ReplayBuffer:
         """Return the current size of internal memory."""
         return len(self.memory)
 
+    
+# We can use one of many different algorithms to design our agent, as long as it works with continuous 
+# state and action spaces. One popular choice is Deep Deterministic Policy Gradients or DDPG. It is actually an 
+# actor-critic method, but the key idea is that the underlying policy function used is deterministic in nature, 
+# with some noise added in externally to produce the desired stochasticity in actions taken.    
+
+# The two main components of the algorithm, the actor and critic networks are implemented as follow
 class Actor:
     """Actor (Policy) Model."""
 
@@ -277,6 +290,17 @@ class Critic:
             inputs=[*self.model.input, K.learning_phase()],
             outputs=action_gradients)
 
+# Ornstein–Uhlenbeck Noise essentially generates random samples from a Gaussian (Normal) distribution, but each sample 
+# affects the next one such that two consecutive samples are more likely to be closer together than further apart. 
+# In this sense, the process in Markovian in nature.        
+# We could just sample from Gaussian distribution, but we want to use this process to add some noise to our actions, 
+# in order to encourage exploratory behavior. 
+# And since our actions translate to force and torque being applied to a quadcopter, we want 
+# consecutive actions to not vary wildly. Otherwise, we may not actually get anywhere! Imagine flicking a 
+# controller up-down, left-right randomly!
+# Besides the temporally correlated nature of samples, the other nice thing about the OU process is that 
+# it tends to settle down close to the specified mean over time. When used to generate noise, we can specify a 
+# mean of zero, and that will have the effect of reducing exploration as we make progress on learning the task.
 class OUNoise:
     """Ornstein-Uhlenbeck process."""
 
